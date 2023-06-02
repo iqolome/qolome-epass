@@ -1,6 +1,6 @@
-import { contextBridge, ipcRenderer } from "electron";
+import { contextBridge, ipcRenderer } from "electron"
+import log from "../main/utils/log"
 
-import log from "../main/utils/log";
 
 // `exposeInMainWorld` can't detect attributes and methods of `prototype`, manually patching it.
 function withPrototype(obj: Record<string, any>) {
@@ -20,6 +20,13 @@ function withPrototype(obj: Record<string, any>) {
 	}
 	return obj;
 }
-contextBridge.exposeInMainWorld("ipcRenderer", withPrototype(ipcRenderer));
+
+contextBridge.exposeInMainWorld("ipcRenderer", withPrototype(ipcRenderer))
 
 contextBridge.exposeInMainWorld("log", log);
+
+contextBridge.exposeInMainWorld("versions", {
+	node: () => process.env.node,
+	chrome: () => process.env.chrome,
+	electron: () => process.env.electron,
+});
